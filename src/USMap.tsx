@@ -29,12 +29,12 @@ function pickRandomFlags(correct: string): string[] {
 const USMap: React.FC<Iprops> = (props: Iprops) => {
   const { setid, processCorrect, width } = props;
   const height: number = width * 5/8;
+  const flagWidth: number = width / 6;
+  const flagHeight: number = flagWidth * 5/8;
       
   let stateNdx = Math.floor(Math.random() * usStates.length);
   let stateId = usStates[stateNdx].id;
   const multipleChoice = pickRandomFlags(stateId); 
-        console.log('USMap new stateId', stateId);
-        console.log('multiple choice', multipleChoice);
   setid(stateId); 
         
   const handleFlagClick = (e: any) => {
@@ -60,25 +60,27 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   }   
         
   return (
-    <div style={{ width, height, backgroundColor: "#dfdfdf" }}>
-      <svg
-         onMouseOver={highlightState}
-         onMouseOut={unHighlightState}
-         xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 959 593"
-         id="us-map">
-         {usStates.map(st => {
-            let classes = 'path';
-            if (st.id === stateId) classes += ' selected';
-            return <path key={st.id} className={classes} id={st.id} d={st.d} />
-         })}
-      </svg>
-      <div className="flags" style={{display:"flex", flexWrap: "wrap", width }}>
-        {multipleChoice.map((st: string) => {
-          return <img key={st} data-flag={st} onClick={handleFlagClick} src={flags[st]} style={{flex: 1, width: "20%", height: "20%" }}/>
-        })}
+      <div style={{ width, height, backgroundColor: "#dfdfdf" }}>
+        <svg
+           onMouseOver={highlightState}
+           onMouseOut={unHighlightState}
+           xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 959 593"
+           id="us-map">
+           {usStates.map(st => {
+              let classes = 'path';
+              if (st.id === stateId) classes += ' selected';
+              return <path key={st.id} className={classes} id={st.id} d={st.d} />
+           })}
+        </svg>
+        <div className="flags" style={{ width }}>
+          {multipleChoice.map((st: string) => (
+            <div style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
+            <img key={st} data-flag={st} onClick={handleFlagClick} src={flags[st]} />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
   );
 }
 

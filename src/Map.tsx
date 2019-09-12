@@ -51,10 +51,8 @@ const Map: React.FC = () => {
   }
 
   return (
-      <div style={{ width: "400px", display: "flex", flexDirection: "column" }}>
-        <div style={{ backgroundColor: "#cacaca" }}>
-        </div>
-        <USMap width={400} setid={setSelectedId} processCorrect={processCorrect} />
+      <div>
+        <USMap width={500} setid={setSelectedId} processCorrect={processCorrect} />
       </div>
   );
 }

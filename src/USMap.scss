@@ -14,3 +14,23 @@
 .selected {
   fill: rgb(255, 153, 0);
 }
+
+.flags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  & div {
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+
+    & img {
+      flex: 1;
+      margin: auto;
+      width: 80%;
+      height: 80%;
+    }
+  }
+}
+

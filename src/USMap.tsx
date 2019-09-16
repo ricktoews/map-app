@@ -1,33 +1,47 @@
-import React from 'react'; 
+import React, { useState } from 'react'; 
 import usStates from './us-map-data.js';
 import { flags } from './USFlags';
 import { pickRandomFlags } from './flags-helper';
+import { initPool, updatePool } from './pool';
+import { initKeyHandler } from './key-entry';
 import './USMap.scss';
   
 interface Iprops {
   width: number;
-  setid: Function;
-  processCorrect: Function;
 }
 
 const USMap: React.FC<Iprops> = (props: Iprops) => {
-  const { setid, processCorrect, width } = props;
+  const [ pool, setPool ] = useState([]);
+console.log('USMap top, pool length', pool.length);
+  if (pool.length === 0) {
+    initPool(pool);
+    initKeyHandler();
+  }
+  const { width } = props;
   const height: number = width * 5/8;
   const flagWidth: number = width / 6;
   const flagHeight: number = flagWidth * 5/8;
-      
-  let stateNdx = Math.floor(Math.random() * usStates.length);
-  let stateId = usStates[stateNdx].id;
-  const multipleChoice = pickRandomFlags(stateId); 
-  setid(stateId); 
-        
+  var selectedCode: string;
+  var multipleChoice: any[];
+
+
+  let stateNdx = Math.floor(Math.random() * pool.length);
+  selectedCode = pool[stateNdx];
+  multipleChoice = pickRandomFlags(selectedCode);
+
   const handleFlagClick = (e: any) => {
     let el = e.currentTarget;
     let flag = el.dataset.flag;
-    if (flag === stateId.toLowerCase()) {
-      processCorrect(stateId);
-    }
+    processClicked(flag);
+  }
 
+  function processClicked(code: any) {
+    console.log('processClicked', code, selectedCode);
+    if (code === selectedCode.toLowerCase()) {
+      updatePool(selectedCode, pool);
+      let newPool = pool.slice(0);
+      setPool(newPool);
+    }
   }
 
   const unHighlightState = (e: any) => {
@@ -52,14 +66,14 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
            id="us-map">
            {usStates.map(st => {
               let classes = 'path';
-              if (st.id === stateId) classes += ' selected';
+              if (st.id === selectedCode) classes += ' selected';
               return <path key={st.id} className={classes} id={st.id} d={st.d} />
            })}
         </svg>
         <div className="flags" style={{ width }}>
           {multipleChoice.map((st: string) => (
-            <div style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
-            <img key={st} data-flag={st} onClick={handleFlagClick} src={flags[st]} />
+            <div key={st} style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
+            <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
             </div>
           ))}
         </div>

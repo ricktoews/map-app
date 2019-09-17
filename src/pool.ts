@@ -11,4 +11,13 @@ function updatePool(valueToRemove: string, values: string[]): string[] {
     values.splice(ndx, 1);
     return values.slice(0);
 }
-export { initPool, updatePool };
+
+function initScoringPool() {
+    let scoring: any = {};
+    usStates.forEach((st: any) => {
+        scoring[st.id] = { presented: 0, correct: 0 };
+    });
+    return scoring;
+}
+
+export { initPool, updatePool, initScoringPool };

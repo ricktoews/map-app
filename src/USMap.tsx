@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import usStates from './us-map-data.js';
 import { flags } from './USFlags';
 import { pickRandomFlags } from './flags-helper';
-import { initPool, updatePool } from './pool';
+import { initPool, updatePool, initScoringPool } from './pool';
 import { initKeyHandler } from './key-entry';
+import { user_id } from './config';
 import './USMap.scss';
   
 interface Iprops {
@@ -12,10 +13,12 @@ interface Iprops {
 
 const USMap: React.FC<Iprops> = (props: Iprops) => {
   const [ pool, setPool ] = useState<string[]>([]);
+  const [ scoring, setScoring ] = useState({ user_id, items: initScoringPool() });
   if (pool.length === 0) {
     initPool(pool);
     initKeyHandler();
   }
+  console.log('scoring', scoring);
   const { width } = props;
   const height: number = width * 5/8;
   const flagWidth: number = width / 6;
@@ -37,9 +40,14 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   function processClicked(code: any) {
     console.log('processClicked', code, selectedCode);
     if (code === selectedCode.toLowerCase()) {
+      scoring.items[selectedCode].correct++
+      scoring.items[selectedCode].presented++
       let newPool = updatePool(selectedCode, pool);
       setPool(newPool);
+    } else {
+      scoring.items[selectedCode].presented++
     }
+    setScoring(scoring);
   }
 
   const unHighlightState = (e: any) => {

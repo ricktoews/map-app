@@ -11,8 +11,7 @@ interface Iprops {
 }
 
 const USMap: React.FC<Iprops> = (props: Iprops) => {
-  const [ pool, setPool ] = useState([]);
-console.log('USMap top, pool length', pool.length);
+  const [ pool, setPool ] = useState<string[]>([]);
   if (pool.length === 0) {
     initPool(pool);
     initKeyHandler();
@@ -38,8 +37,7 @@ console.log('USMap top, pool length', pool.length);
   function processClicked(code: any) {
     console.log('processClicked', code, selectedCode);
     if (code === selectedCode.toLowerCase()) {
-      updatePool(selectedCode, pool);
-      let newPool = pool.slice(0);
+      let newPool = updatePool(selectedCode, pool);
       setPool(newPool);
     }
   }

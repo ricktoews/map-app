@@ -6,8 +6,9 @@ function initPool(values: any[]) {
     });
 }
 
-function updatePool(valueToRemove: string, values: any[]) {
+function updatePool(valueToRemove: string, values: string[]): string[] {
     let ndx = values.indexOf(valueToRemove);
     values.splice(ndx, 1);
+    return values.slice(0);
 }
 export { initPool, updatePool };

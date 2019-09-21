@@ -1,25 +1,26 @@
 import React, { useState } from 'react'; 
+import ScoringPanel from './ScoringPanel';
 import usStates from './us-map-data.js';
 import { flags } from './USFlags';
 import { pickRandomFlags } from './flags-helper';
 import { initPool, updatePool, initScoringPool } from './pool';
 import { initKeyHandler } from './key-entry';
+import { setTracking } from './api';
 import { user_id } from './config';
 import './USMap.scss';
   
 interface Iprops {
+  tracking: any;
   width: number;
 }
 
 const USMap: React.FC<Iprops> = (props: Iprops) => {
+  const { tracking, width } = props;
   const [ pool, setPool ] = useState<string[]>([]);
-  const [ scoring, setScoring ] = useState({ user_id, items: initScoringPool() });
   if (pool.length === 0) {
     initPool(pool);
     initKeyHandler();
   }
-  console.log('scoring', scoring);
-  const { width } = props;
   const height: number = width * 5/8;
   const flagWidth: number = width / 6;
   const flagHeight: number = flagWidth * 5/8;
@@ -40,14 +41,17 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   function processClicked(code: any) {
     console.log('processClicked', code, selectedCode);
     if (code === selectedCode.toLowerCase()) {
-      scoring.items[selectedCode].correct++
-      scoring.items[selectedCode].presented++
+      tracking[selectedCode].correct++;
+      tracking[selectedCode].presented++;
       let newPool = updatePool(selectedCode, pool);
       setPool(newPool);
     } else {
-      scoring.items[selectedCode].presented++
+      tracking[selectedCode].presented++;
     }
-    setScoring(scoring);
+    setTracking(1, tracking).then((resp: any) => {
+      //tracking[key] = resp[key];
+      console.log('Save completed', selectedCode, tracking[selectedCode]);
+    });
   }
 
   const unHighlightState = (e: any) => {
@@ -61,27 +65,30 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
     target.classList.add('highlight');
     e.stopPropagation();
   }   
-        
+
   return (
-      <div style={{ width, height, backgroundColor: "#dfdfdf" }}>
-        <svg
-           onMouseOver={highlightState}
-           onMouseOut={unHighlightState}
-           xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 959 593"
-           id="us-map">
-           {usStates.map(st => {
-              let classes = 'path';
-              if (st.id === selectedCode) classes += ' selected';
-              return <path key={st.id} className={classes} id={st.id} d={st.d} />
-           })}
-        </svg>
-        <div className="flags" style={{ width }}>
-          {multipleChoice.map((st: string) => (
-            <div key={st} style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
-            <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
-            </div>
-          ))}
+      <div>
+        <ScoringPanel tracking={tracking} />
+        <div style={{ width, height, backgroundColor: "#dfdfdf" }}>
+          <svg
+             onMouseOver={highlightState}
+             onMouseOut={unHighlightState}
+             xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 959 593"
+             id="us-map">
+             {usStates.map(st => {
+                let classes = 'path';
+                if (st.id === selectedCode) classes += ' selected';
+                return <path key={st.id} className={classes} id={st.id} d={st.d} />
+             })}
+          </svg>
+          <div className="flags" style={{ width }}>
+            {multipleChoice.map((st: string) => (
+              <div key={st} style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
+              <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
   );

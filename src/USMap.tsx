@@ -3,7 +3,7 @@ import ScoringPanel from './ScoringPanel';
 import usStates from './us-map-data.js';
 import { flags } from './USFlags';
 import { pickRandomFlags } from './flags-helper';
-import { initPool, updatePool, initScoringPool } from './pool';
+import { initPool, updatePool } from './pool';
 import { initKeyHandler } from './key-entry';
 import { setTracking } from './api';
 import { user_id } from './config';
@@ -18,7 +18,7 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   const { tracking, width } = props;
   const [ pool, setPool ] = useState<string[]>([]);
   if (pool.length === 0) {
-    initPool(pool);
+    initPool(pool, tracking);
     initKeyHandler();
   }
   const height: number = width * 5/8;
@@ -49,7 +49,6 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
       tracking[selectedCode].presented++;
     }
     setTracking(1, tracking).then((resp: any) => {
-      //tracking[key] = resp[key];
       console.log('Save completed', selectedCode, tracking[selectedCode]);
     });
   }

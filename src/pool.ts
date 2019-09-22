@@ -1,8 +1,15 @@
 import usStates from './us-map-data.js';
 
-function initPool(values: any[]) {
+/*
+  initPool. Set pool size for each round.
+  This needs to be not just the complete list of items but filtered by focus level.
+  We need access to the tracking data.
+*/
+function initPool(values: any[], tracking: any) {
     usStates.forEach((st: any) => {
-        values.push(st.id);
+        if (!tracking[st.id].ignore) {
+          values.push(st.id);
+        }
     });
 }
 
@@ -12,12 +19,4 @@ function updatePool(valueToRemove: string, values: string[]): string[] {
     return values.slice(0);
 }
 
-function initScoringPool() {
-    let scoring: any = {};
-    usStates.forEach((st: any) => {
-        scoring[st.id] = { presented: 0, correct: 0 };
-    });
-    return scoring;
-}
-
-export { initPool, updatePool, initScoringPool };
+export { initPool, updatePool };

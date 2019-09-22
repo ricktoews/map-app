@@ -11,11 +11,11 @@ const Map: React.FC = () => {
         setTracking_data(resp);
       });
   }
-  return (
+  return tracking_data ? (
       <div>
         <USMap tracking={tracking_data} width={500} />
       </div>
-  );
+  ) : null;
 }
 
 export default Map;

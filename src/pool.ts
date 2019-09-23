@@ -7,7 +7,7 @@ import usStates from './us-map-data.js';
 */
 function initPool(values: any[], tracking: any) {
     usStates.forEach((st: any) => {
-        if (!tracking[st.id].ignore) {
+        if (tracking[st.id].attend !== -1) {
           values.push(st.id);
         }
     });

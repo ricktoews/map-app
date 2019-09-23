@@ -6,8 +6,9 @@ import './ScoringPanel.scss';
 var tracking: any;
 
 const stdHeight = '10px';
-const IGNORE_OFF = false;
-const IGNORE_ON = true;
+const SPOTLIGHT = 1;
+const ATTEND_OFF = 0;
+const IGNORE = -1;
 
 /*
   The threshold hash and calculateFocus function are used to determine which category of focus an item belongs to.
@@ -54,9 +55,9 @@ function getMaxPresented(tracking: any) {
   Format item label for display in scoring area.
   Includes a click handler so item can be moved to Ignore section.
 */
-function makeItem(item: string, setChangeIgnore: Function, ignore: boolean) {
+function makeItem(item: string, setChangeIgnore: Function, attend: number) {
   const handleClick = (e: any) => {
-    tracking[item].ignore = !ignore;
+    tracking[item].attend = attend ? -1 : 0;
     // Clone to avoid Object.is of true, so React doesn't bail on updating state and rerendering.
     // See:
     //   https://reactjs.org/docs/hooks-reference.html#bailing-out-of-a-state-update
@@ -111,35 +112,46 @@ function ScoringPanel(props: IProps) {
  
   return (
     <div className="scoring-panel">
-      <h3>Greater focus</h3>
+      <h3>Spotlight</h3>
       <ul className="section">
       {items.map((item: any, key: number) => {
-        let showItem = makeItem(item, setChangeIgnore, IGNORE_OFF);
+        let showItem = makeItem(item, setChangeIgnore, SPOTLIGHT);
         let presented = tracking[item].presented;
         let correct = tracking[item].correct;
         let focusLevel = calculateFocus(presented, correct, maxPresented);
-        let show = focusLevel === 10 && !tracking[item].ignore;
+        let show = tracking[item].attend === 1;
+        return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
+      })}
+      </ul>
+      <h3>Greater focus</h3>
+      <ul className="section">
+      {items.map((item: any, key: number) => {
+        let showItem = makeItem(item, setChangeIgnore, ATTEND_OFF);
+        let presented = tracking[item].presented;
+        let correct = tracking[item].correct;
+        let focusLevel = calculateFocus(presented, correct, maxPresented);
+        let show = focusLevel === 10 && tracking[item].attend !== -1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
       })}
       </ul>
       <h3>Lesser focus</h3>
       <ul className="section">
       {items.map((item: any, key: number) => {
-        let showItem = makeItem(item, setChangeIgnore, IGNORE_OFF);
+        let showItem = makeItem(item, setChangeIgnore, ATTEND_OFF);
         let presented = tracking[item].presented;
         let correct = tracking[item].correct;
         let focusLevel = calculateFocus(presented, correct, maxPresented);
-        let show = focusLevel === 0 && !tracking[item].ignore;
+        let show = focusLevel === 0 && tracking[item].attend !== -1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
       })}
       </ul>
       <h3>Ignore</h3>
       <ul className="section">
       {items.map((item: any, key: number) => {
-        let showItem = makeItem(item, setChangeIgnore, IGNORE_ON);
+        let showItem = makeItem(item, setChangeIgnore, IGNORE);
         let presented = tracking[item].presented;
         let correct = tracking[item].correct;
-        let show = tracking[item].ignore;
+        let show = tracking[item].attend === -1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
       })}
       </ul>

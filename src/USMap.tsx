@@ -27,15 +27,26 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   var selectedCode: string;
   var multipleChoice: any[];
 
-
   let stateNdx = Math.floor(Math.random() * pool.length);
   selectedCode = pool[stateNdx];
   multipleChoice = pickRandomFlags(selectedCode);
+
+  const descClass = 1||tracking[selectedCode].desc ? 'show-description' : 'hide-description';
+  const enterDescClass = 1||tracking[selectedCode].desc ? 'show-enter-description' : 'hide-enter-description';
 
   const handleFlagClick = (e: any) => {
     let el = e.currentTarget;
     let flag = el.dataset.flag;
     processClicked(flag);
+  }
+
+  const handleBlur = (e: any) => {
+    let description = e.currentTarget.value;
+    console.log('description', selectedCode, description);
+    tracking[selectedCode].desc = description;
+    setTracking(1, tracking).then((resp: any) => {
+      console.log('Save description complete', selectedCode, tracking[selectedCode]);
+    });
   }
 
   function processClicked(code: any) {
@@ -82,13 +93,21 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
              })}
           </svg>
         </div>
-          <div className="flags">
-            {multipleChoice.map((st: string) => (
-              <div key={st} style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
-              <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
-              </div>
-            ))}
+        <div className={'item-description ' + descClass}>{tracking[selectedCode].desc}</div>
+        <div className="flags">
+          {multipleChoice.map((st: string) => (
+            <div key={st} style={{ height: "15%", width: "15%" }}>
+            <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
+            </div>
+          ))}
+        </div>
+        <div className={'focused-flag ' + enterDescClass}>
+          <img src={flags[selectedCode.toLowerCase()]} />
+          <div className="item-description-wrapper">
+            <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
+            <textarea onBlur={handleBlur} id="item-description"></textarea>
           </div>
+        </div>
       </div>
   );
 }

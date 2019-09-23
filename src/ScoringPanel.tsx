@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { setTracking } from './api';
+import { findOutliers } from './helpers/outliers';
 import './ScoringPanel.scss';
 
 var tracking: any;
@@ -42,6 +43,9 @@ function calculateFocus(p: number, c: number, max: number) {
 */
 function getMaxPresented(tracking: any) {
   let presentedVals = tracking ? Object.values(tracking).map((item: any) => item.presented) : [];
+  let { fences, outliers } = findOutliers(presentedVals);
+  // Might be better to filter by fences than individual outliers. Consider it.
+  presentedVals = presentedVals.filter((v: any) => outliers.outer.indexOf(v) === -1);
   let maxPresented = Math.max(...presentedVals);
   return maxPresented;
 }

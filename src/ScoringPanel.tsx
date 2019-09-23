@@ -56,8 +56,9 @@ function getMaxPresented(tracking: any) {
   Includes a click handler so item can be moved to Ignore section.
 */
 function makeItem(item: string, setChangeIgnore: Function, attend: number) {
+
   const handleClick = (e: any) => {
-    tracking[item].attend = attend ? -1 : 0;
+    tracking[item].attend = attend ? 0 : -1;
     // Clone to avoid Object.is of true, so React doesn't bail on updating state and rerendering.
     // See:
     //   https://reactjs.org/docs/hooks-reference.html#bailing-out-of-a-state-update

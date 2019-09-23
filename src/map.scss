@@ -1,3 +1,14 @@
+@media (max-width: 480px) {
+  .map-container {
+    width: 400px;
+  }
+}
+@media (min-width: 481px) {
+  .map-container {
+    width: 500px;
+  }
+}
+
 .highlight {
   fill: rgb(0, 144, 255);
 }

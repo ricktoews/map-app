@@ -68,7 +68,7 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   return (
       <div>
         <ScoringPanel tracking={tracking} />
-        <div style={{ width, height, backgroundColor: "#dfdfdf" }}>
+        <div className="map" style={{ height }}>
           <svg
              onMouseOver={highlightState}
              onMouseOut={unHighlightState}
@@ -81,14 +81,14 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
                 return <path key={st.id} className={classes} id={st.id} d={st.d} />
              })}
           </svg>
-          <div className="flags" style={{ width }}>
+        </div>
+          <div className="flags">
             {multipleChoice.map((st: string) => (
               <div key={st} style={{ height: flagHeight + "px", width: flagWidth + "px" }}>
               <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
               </div>
             ))}
           </div>
-        </div>
       </div>
   );
 }

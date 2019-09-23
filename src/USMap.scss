@@ -1,3 +1,18 @@
+@media (max-width: 480px) {
+  .map {
+    width: 400px;
+  }
+}
+@media (min-width: 481px) {
+  .map {
+    width: 500px;
+  }
+}
+.map {
+  background-color:#fff;
+  border: 1px solid black;
+}
+
 .path {
   fill: #d3d3d3;
   stroke: #ffffff;
@@ -31,6 +46,17 @@
       width: 80%;
       height: 80%;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .flags {
+    width: 400px;
+  }
+}
+@media (min-width: 481px) {
+  .flags {
+    width: 500px;
   }
 }
 

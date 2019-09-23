@@ -1,6 +1,5 @@
 import React, { useState } from 'react'; 
-//import antilles from './antilles-map-data.js';
-import svgdata from './se-asia-map.js';
+import svgdata from './antilles-map-data.js';
 import './map.scss';
 
 interface Iprops {

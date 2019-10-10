@@ -31,8 +31,17 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   selectedCode = pool[stateNdx];
   multipleChoice = pickRandomFlags(selectedCode);
 
-  const descClass = 1||tracking[selectedCode].desc ? 'show-description' : 'hide-description';
-  const enterDescClass = 1||tracking[selectedCode].desc ? 'show-enter-description' : 'hide-enter-description';
+  const descClass = 0||tracking[selectedCode].desc ? 'show-description' : 'hide-description';
+
+  var enterDescClass, flagsClass;
+
+  if (0&&tracking[selectedCode].desc) {
+    enterDescClass = 'show-enter-description';
+    flagsClass = 'no-flags';
+  } else {
+    enterDescClass = 'hide-enter-description';
+    flagsClass = 'flags';
+  }
 
   const handleFlagClick = (e: any) => {
     let el = e.currentTarget;
@@ -44,6 +53,7 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
     let description = e.currentTarget.value;
     console.log('description', selectedCode, description);
     tracking[selectedCode].desc = description;
+    setPool(JSON.parse(JSON.stringify(pool)));
     setTracking(1, tracking).then((resp: any) => {
       console.log('Save description complete', selectedCode, tracking[selectedCode]);
     });
@@ -94,13 +104,14 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
           </svg>
         </div>
         <div className={'item-description ' + descClass}>{tracking[selectedCode].desc}</div>
-        <div className="flags">
+        <div className={flagsClass}>
           {multipleChoice.map((st: string) => (
             <div key={st} style={{ height: "15%", width: "15%" }}>
             <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
             </div>
           ))}
         </div>
+
         <div className={'focused-flag ' + enterDescClass}>
           <img src={flags[selectedCode.toLowerCase()]} />
           <div className="item-description-wrapper">

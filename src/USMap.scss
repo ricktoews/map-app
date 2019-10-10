@@ -6,6 +6,7 @@
 @media (min-width: 481px) {
   .map {
     width: 500px;
+    box-sizing: border-box;
   }
 }
 .map {
@@ -30,6 +31,9 @@
   fill: rgb(255, 153, 0);
 }
 
+.no-flags {
+  display: none;
+}
 .flags {
   display: flex;
   flex-wrap: wrap;
@@ -83,6 +87,15 @@
     height: 14%;
     margin: 3px;
   }
+}
+
+.item-description {
+  background-color: #ccc;
+  box-sizing: border-box;
+  width: 500px;
+  font-size: 12px;
+  padding: 10px;
+  border: 1px solid gray;
 }
 
 .show-description, .show-enter-description {

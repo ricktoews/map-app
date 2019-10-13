@@ -41,7 +41,7 @@ export const getTracking = (user_id: number) => {
       let tracking_data = data.tracking_data || '';
       tracking_data = safeJSONParse(tracking_data);
       let keys = Object.keys(tracking_data);
-      keys.forEach((k: string) => { tracking_data[k].desc = 'lorem ipsum etcetera, the time has come, the walrus said, to talk of many things: of shoes and ships and sealing wax, of cabbages and kings--and why the sea is boiling hot, and whether pigs have wings.'; });
+//      keys.forEach((k: string) => { tracking_data[k].desc = 'lorem ipsum etcetera, the time has come, the walrus said, to talk of many things: of shoes and ships and sealing wax, of cabbages and kings--and why the sea is boiling hot, and whether pigs have wings.'; });
       return tracking_data; 
     })
     ;

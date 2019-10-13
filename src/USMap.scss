@@ -2,13 +2,27 @@
   .map {
     width: 400px;
   }
+  .flags, .focused-flag {
+    width: 400px;
+  }
+  .focused-flag .item-description-wrapper {
+    width: 350px;
+  }
 }
 @media (min-width: 481px) {
   .map {
     width: 500px;
     box-sizing: border-box;
   }
+  .flags, .focused-flag {
+    width: 500px;
+  }
+  .focused-flag .item-description-wrapper {
+    width: 400px;
+  }
 }
+
+
 .map {
   background-color:#fff;
   border: 1px solid black;
@@ -53,23 +67,6 @@
   }
 }
 
-@media (max-width: 480px) {
-  .flags, .focused-flag {
-    width: 400px;
-  }
-  .focused-flag .item-description-wrapper {
-    width: 350px;
-  }
-}
-@media (min-width: 481px) {
-  .flags, .focused-flag {
-    width: 500px;
-  }
-  .focused-flag .item-description-wrapper {
-    width: 400px;
-  }
-}
-
 .focused-flag {
   display: flex;
   .item-description-wrapper {
@@ -83,9 +80,9 @@
     margin: 3px;
   }
   img {
-    width: 14%;
-    height: 14%;
-    margin: 3px;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 3px;
   }
 }
 

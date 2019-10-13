@@ -31,16 +31,13 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   selectedCode = pool[stateNdx];
   multipleChoice = pickRandomFlags(selectedCode);
 
-  const descClass = 0||tracking[selectedCode].desc ? 'show-description' : 'hide-description';
+  const showDescClass = tracking[selectedCode].desc ? 'show-description' : 'hide-description';
 
-  var enterDescClass, flagsClass;
-
-  if (0&&tracking[selectedCode].desc) {
+  var enterDescClass = 'hide-enter-description', flagsClass = 'flags';
+  var remedial = false;
+  if (remedial) {
     enterDescClass = 'show-enter-description';
     flagsClass = 'no-flags';
-  } else {
-    enterDescClass = 'hide-enter-description';
-    flagsClass = 'flags';
   }
 
   const handleFlagClick = (e: any) => {
@@ -103,20 +100,20 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
              })}
           </svg>
         </div>
-        <div className={'item-description ' + descClass}>{tracking[selectedCode].desc}</div>
+        <div className={'item-description ' + showDescClass}>{tracking[selectedCode].desc}</div>
         <div className={flagsClass}>
           {multipleChoice.map((st: string) => (
-            <div key={st} style={{ height: "15%", width: "15%" }}>
-            <img data-flag={st} onClick={handleFlagClick} src={flags[st]} />
-            </div>
+            <img key={st} style={{ width: '15%', height: '15%' }} data-flag={st} onClick={handleFlagClick} src={flags[st]} />
           ))}
         </div>
 
-        <div className={'focused-flag ' + enterDescClass}>
-          <img src={flags[selectedCode.toLowerCase()]} />
-          <div className="item-description-wrapper">
-            <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
-            <textarea onBlur={handleBlur} id="item-description"></textarea>
+        <div className={enterDescClass}>
+          <div className="focused-flag">
+            <img src={flags[selectedCode.toLowerCase()]} />
+            <div className="item-description-wrapper">
+              <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
+              <textarea onBlur={handleBlur} id="item-description"></textarea>
+            </div>
           </div>
         </div>
       </div>

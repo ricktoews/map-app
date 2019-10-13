@@ -1,5 +1,4 @@
 import React, { useState } from 'react'; 
-import ScoringPanel from './ScoringPanel';
 import usStates from './us-map-data.js';
 import { flags } from './USFlags';
 import { pickRandomFlags } from './flags-helper';
@@ -29,7 +28,7 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
 
   let stateNdx = Math.floor(Math.random() * pool.length);
   selectedCode = pool[stateNdx];
-  selectedCode = 'CT';
+  selectedCode = 'OK';
   multipleChoice = pickRandomFlags(selectedCode);
 
   /*
@@ -48,12 +47,23 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
       Use the flags class.
 
   */
-  const showDescClass = tracking[selectedCode].remedial && tracking[selectedCode].desc ? 'show-description' : 'hide-description';
-
-  var enterDescClass = 'hide-enter-description', flagsClass = 'flags';
-  if (!tracking[selectedCode].desc && tracking[selectedCode].remedial) {
-    enterDescClass = 'show-enter-description';
-    flagsClass = 'no-flags';
+  var curTrack = tracking[selectedCode];
+  console.log('curTrack', curTrack);
+  var showDescClass, enterDescClass, flagsClass;
+  if (curTrack.remedial) {
+    if (curTrack.desc > '') {
+      showDescClass = 'show-description';
+      enterDescClass = 'hide-enter-description';
+      flagsClass = 'flags';
+    } else {
+      showDescClass = 'hide-description';
+      enterDescClass = 'show-enter-description';
+      flagsClass = 'no-flags';
+    }
+  } else {
+    showDescClass = 'hide-description';
+    enterDescClass = 'hide-enter-description';
+    flagsClass = 'flags';
   }
 
   const handleFlagClick = (e: any) => {
@@ -86,10 +96,10 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
       console.log('Save completed', selectedCode, tracking[selectedCode]);
     });
   }
-
+console.log('showDescClass', showDescClass);
   return (
-      <div>
-        <ScoringPanel tracking={tracking} />
+      <div className="layout">
+
         <div className="map" style={{ height }}>
           <svg
              xmlns="http://www.w3.org/2000/svg"
@@ -102,22 +112,28 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
              })}
           </svg>
         </div>
-        <div className={'item-description ' + showDescClass}>{tracking[selectedCode].desc}</div>
-        <div className={flagsClass}>
-          {multipleChoice.map((st: string) => (
-            <img key={st} style={{ width: '15%', height: '15%' }} data-flag={st} onClick={handleFlagClick} src={flags[st]} />
-          ))}
-        </div>
 
-        <div className={enterDescClass}>
-          <div className="focused-flag">
-            <img src={flags[selectedCode.toLowerCase()]} />
-            <div className="item-description-wrapper">
-              <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
-              <textarea onBlur={handleBlur} id="item-description"></textarea>
+{/*        <MultChoice handleClick={handleClick} items={multipleChoic} selected={st} /> */}
+        <div className="interactive">
+          <div className={'item-description ' + showDescClass}>{tracking[selectedCode].desc}</div>
+          <div className={flagsClass}>
+            {multipleChoice.map((st: string) => (
+              <img key={st} style={{ width: '15%', height: '15%' }} data-flag={st} onClick={handleFlagClick} src={flags[st]} />
+            ))}
+          </div>
+
+{/*        <RemedialSetup /> */}
+          <div className={enterDescClass}>
+            <div className="focused-flag">
+              <img src={flags[selectedCode.toLowerCase()]} />
+              <div className="item-description-wrapper">
+                <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
+                <textarea onBlur={handleBlur} id="item-description"></textarea>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
   );
 }

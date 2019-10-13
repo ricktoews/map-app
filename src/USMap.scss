@@ -17,10 +17,19 @@
   }
 }
 @media (min-width: 481px) {
+  .layout {
+    display: flex;
+  }
+
   .map {
     width: 500px;
     box-sizing: border-box;
   }
+
+  .interactive {
+    margin-left: 20px;
+  }
+
   .flags, .focused-flag {
     width: 500px;
   }
@@ -30,6 +39,7 @@
   .item-description {
     width: 500px;
     padding: 10px;
+    margin-bottom: 10px;
   }
 }
 

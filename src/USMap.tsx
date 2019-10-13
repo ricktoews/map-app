@@ -29,13 +29,29 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
 
   let stateNdx = Math.floor(Math.random() * pool.length);
   selectedCode = pool[stateNdx];
+  selectedCode = 'CT';
   multipleChoice = pickRandomFlags(selectedCode);
 
-  const showDescClass = tracking[selectedCode].desc ? 'show-description' : 'hide-description';
+  /*
+    If the remedial flag is set:
+      If a description has been entered already,
+        Use the show-description class.
+        Use the hide-enter-description class.
+        Use the flags class.
+      Else,
+        Use the hide-description class.
+        Use the show-enter-description class.
+        Use the no-flags class.
+    Else,
+      Use the hide-description class.
+      Use the hide-enter-description class.
+      Use the flags class.
+
+  */
+  const showDescClass = tracking[selectedCode].remedial && tracking[selectedCode].desc ? 'show-description' : 'hide-description';
 
   var enterDescClass = 'hide-enter-description', flagsClass = 'flags';
-  var remedial = false;
-  if (remedial) {
+  if (!tracking[selectedCode].desc && tracking[selectedCode].remedial) {
     enterDescClass = 'show-enter-description';
     flagsClass = 'no-flags';
   }
@@ -71,25 +87,11 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
     });
   }
 
-  const unHighlightState = (e: any) => {
-    let target = e.target;
-    target.classList.remove('highlight');
-    e.stopPropagation();
-  }
-    
-  const highlightState = (e: any) => {
-    let target = e.target;
-    target.classList.add('highlight');
-    e.stopPropagation();
-  }   
-
   return (
       <div>
         <ScoringPanel tracking={tracking} />
         <div className="map" style={{ height }}>
           <svg
-             onMouseOver={highlightState}
-             onMouseOut={unHighlightState}
              xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 959 593"
              id="us-map">

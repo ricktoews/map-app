@@ -1,23 +1,5 @@
+import { safeJSONParse, setRemedial } from './api-helper';
 const api_base = '//rest.toewsweb.net/track.php';
-
-/*
-  Utility function. Should probably go in an imported helper file.
-  Perform JSON.parse within a try/catch block, and return the result.
-  If the try fails:
-    Output the error message and the attempted string to the console, on separate lines, for increased legibility.
-    Return an object containing a "parse failed" message and the original string.
-*/
-function safeJSONParse(str: any) {
-  let parsed = { msg: 'json parse failed', original: str };
-  try {
-    parsed = JSON.parse(str);
-  } catch(e) {
-    console.log('safeJSONParse error', e);
-    console.log('safeJSONParse string attempted', str);
-  }
-  return parsed;
-}
-
 
 export const getTracking = (user_id: number) => {
   let url = api_base + '/gettrack';
@@ -40,7 +22,8 @@ export const getTracking = (user_id: number) => {
       let data = resp.data || {};
       let tracking_data = data.tracking_data || '';
       tracking_data = safeJSONParse(tracking_data);
-      let keys = Object.keys(tracking_data);
+      setRemedial(tracking_data);
+//      let keys = Object.keys(tracking_data);
 //      keys.forEach((k: string) => { tracking_data[k].desc = 'lorem ipsum etcetera, the time has come, the walrus said, to talk of many things: of shoes and ships and sealing wax, of cabbages and kings--and why the sea is boiling hot, and whether pigs have wings.'; });
       return tracking_data; 
     })

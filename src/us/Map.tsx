@@ -1,19 +1,19 @@
 import React, { useState } from 'react'; 
 //import usStates from './us-map-data.js';
 //import { flags } from './USFlags';
-import { pickRandomFlags } from './flags-helper';
-import { initPool, updatePool } from './pool';
-import { initKeyHandler } from './key-entry';
-import { setTracking } from './api';
-import { user_id } from './config';
-import './USMap.scss';
+import { pickRandomFlags } from '../flags-helper';
+import { initPool, updatePool } from '../pool';
+import { initKeyHandler } from '../key-entry';
+import { setTracking } from '../api';
+import { user_id } from '../config';
+import './Map.scss';
   
 interface Iprops {
   tracking: any;
   width: number;
 }
 
-const USMap: React.FC<Iprops> = (props: Iprops) => {
+const Map: React.FC<Iprops> = (props: Iprops) => {
   const { tracking, width } = props;
   const [ pool, setPool ] = useState<string[]>([]);
   if (pool.length === 0) {
@@ -139,5 +139,5 @@ console.log('map pieces', Object.values(tracking).map((item: any) => item.svg));
   );
 }
 
-export default USMap;
+export default Map;
 

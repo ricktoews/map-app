@@ -1,6 +1,5 @@
 import React, { useState } from 'react'; 
-//import antilles from './antilles-map-data.js';
-import antilles from './formatted.js';
+import antilles from './map-data.js';
 import './map.scss';
   
 interface Iprops {

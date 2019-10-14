@@ -1,5 +1,3 @@
-//import usStates from './us-map-data.js';
-
 function pickRandomFlags(correct: string, tracking: any): string[] {
   var poolItems = Object.keys(tracking);
   // Choose five random items.

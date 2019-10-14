@@ -1,6 +1,6 @@
 import { safeJSONParse, setRemedial } from './api-helper';
-import svgData from './us-map-data.js';
-import { flags } from './USFlags';
+import svgData from './us/map-data.js';
+import { flags } from './us/Flags';
 const api_base = '//rest.toewsweb.net/track.php';
 
 export const getTracking = (user_id: number, bank: string) => {

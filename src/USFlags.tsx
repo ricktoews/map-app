@@ -1,62 +1,62 @@
-import ak from './us-flags/ak.png';
-import al from './us-flags/al.png';
-import ar from './us-flags/ar.png';
-import az from './us-flags/az.png';
-import ca from './us-flags/ca.png';
-import co from './us-flags/co.png';
-import ct from './us-flags/ct.png';
-import de from './us-flags/de.png';
-import fl from './us-flags/fl.png';
-import ga from './us-flags/ga.png';
-import hi from './us-flags/hi.png';
-import ia from './us-flags/ia.png';
-import id from './us-flags/id.png';
-import st_in from './us-flags/in.png';
-import il from './us-flags/il.png';
-import ks from './us-flags/ks.png';
-import ky from './us-flags/ky.png';
-import la from './us-flags/la.png';
-import ma from './us-flags/ma.png';
-import me from './us-flags/me.png';
-import md from './us-flags/md.png';
-import mi from './us-flags/mi.png';
-import mn from './us-flags/mn.png';
-import mo from './us-flags/mo.png';
-import ms from './us-flags/ms.png';
-import mt from './us-flags/mt.png';
-import nc from './us-flags/nc.png';
-import nd from './us-flags/nd.png';
-import ne from './us-flags/ne.png';
-import nh from './us-flags/nh.png';
-import nj from './us-flags/nj.png';
-import ny from './us-flags/ny.png';
-import nm from './us-flags/nm.png';
-import nv from './us-flags/nv.png';
-import oh from './us-flags/oh.png';
-import ok from './us-flags/ok.png';
-import or from './us-flags/or.png';
-import pa from './us-flags/pa.png';
-import ri from './us-flags/ri.png';
-import sc from './us-flags/sc.png';
-import sd from './us-flags/sd.png';
-import tn from './us-flags/tn.png';
-import tx from './us-flags/tx.png';
-import ut from './us-flags/ut.png';
-import va from './us-flags/va.png';
-import vt from './us-flags/vt.png';
-import wa from './us-flags/wa.png';
-import wi from './us-flags/wi.png';
-import wv from './us-flags/wv.png';
-import wy from './us-flags/wy.png';
+import AK from './us-flags/ak.png';
+import AL from './us-flags/al.png';
+import AR from './us-flags/ar.png';
+import AZ from './us-flags/az.png';
+import CA from './us-flags/ca.png';
+import CO from './us-flags/co.png';
+import CT from './us-flags/ct.png';
+import DE from './us-flags/de.png';
+import FL from './us-flags/fl.png';
+import GA from './us-flags/ga.png';
+import HI from './us-flags/hi.png';
+import IA from './us-flags/ia.png';
+import ID from './us-flags/id.png';
+import IN from './us-flags/in.png';
+import IL from './us-flags/il.png';
+import KS from './us-flags/ks.png';
+import KY from './us-flags/ky.png';
+import LA from './us-flags/la.png';
+import MA from './us-flags/ma.png';
+import ME from './us-flags/me.png';
+import MD from './us-flags/md.png';
+import MI from './us-flags/mi.png';
+import MN from './us-flags/mn.png';
+import MO from './us-flags/mo.png';
+import MS from './us-flags/ms.png';
+import MT from './us-flags/mt.png';
+import NC from './us-flags/nc.png';
+import ND from './us-flags/nd.png';
+import NE from './us-flags/ne.png';
+import NH from './us-flags/nh.png';
+import NJ from './us-flags/nj.png';
+import NY from './us-flags/ny.png';
+import NM from './us-flags/nm.png';
+import NV from './us-flags/nv.png';
+import OH from './us-flags/oh.png';
+import OK from './us-flags/ok.png';
+import OR from './us-flags/or.png';
+import PA from './us-flags/pa.png';
+import RI from './us-flags/ri.png';
+import SC from './us-flags/sc.png';
+import SD from './us-flags/sd.png';
+import TN from './us-flags/tn.png';
+import TX from './us-flags/tx.png';
+import UT from './us-flags/ut.png';
+import VA from './us-flags/va.png';
+import VT from './us-flags/vt.png';
+import WA from './us-flags/wa.png';
+import WI from './us-flags/wi.png';
+import WV from './us-flags/wv.png';
+import WY from './us-flags/wy.png';
 
 interface FlagIcons {
   [key: string]: string
 }
 
 const flags: FlagIcons = {
-  ak, al, ar, az, ca, co, ct, de, fl,
-  ga, hi, ia, id, in: st_in, il, ks, ky, la, ma, me, md, mi, mn, mo, ms, mt, nc, nd, ne, nh, nj, ny,
-  nm, nv, oh, ok, or, pa, ri, sc, sd, tn, tx, ut, va, vt, wa, wi, wv, wy
+  AK, AL, AR, AZ, CA, CO, CT, DE, FL,
+  GA, HI, IA, ID, IN, IL, KS, KY, LA, MA, ME, MD, MI, MN, MO, MS, MT, NC, ND, NE, NH, NJ, NY,
+  NM, NV, OH, OK, OR, PA, RI, SC, SD, TN, TX, UT, VA, VT, WA, WI, WV, WY
 };
 
 export { flags };

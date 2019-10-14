@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; 
-import usStates from './us-map-data.js';
-import { flags } from './USFlags';
+//import usStates from './us-map-data.js';
+//import { flags } from './USFlags';
 import { pickRandomFlags } from './flags-helper';
 import { initPool, updatePool } from './pool';
 import { initKeyHandler } from './key-entry';
@@ -26,10 +26,10 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
   var selectedCode: string;
   var multipleChoice: any[];
 
-  let stateNdx = Math.floor(Math.random() * pool.length);
-  selectedCode = pool[stateNdx];
+  let itemNdx = Math.floor(Math.random() * pool.length);
+  selectedCode = pool[itemNdx];
   selectedCode = 'OK';
-  multipleChoice = pickRandomFlags(selectedCode);
+  multipleChoice = pickRandomFlags(selectedCode, tracking);
 
   /*
     If the remedial flag is set:
@@ -84,7 +84,7 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
 
   function processClicked(code: any) {
     console.log('processClicked', code, selectedCode);
-    if (code === selectedCode.toLowerCase()) {
+    if (code === selectedCode) {
       tracking[selectedCode].correct++;
       tracking[selectedCode].presented++;
       let newPool = updatePool(selectedCode, pool);
@@ -96,7 +96,8 @@ const USMap: React.FC<Iprops> = (props: Iprops) => {
       console.log('Save completed', selectedCode, tracking[selectedCode]);
     });
   }
-console.log('showDescClass', showDescClass);
+console.log('map pieces', Object.values(tracking).map((item: any) => item.svg));
+  var mapPieces = Object.values(tracking).map((item: any) => item.svg);
   return (
       <div className="layout">
 
@@ -105,7 +106,7 @@ console.log('showDescClass', showDescClass);
              xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 959 593"
              id="us-map">
-             {usStates.map(st => {
+             {mapPieces.map(st => {
                 let classes = 'path';
                 if (st.id === selectedCode) classes += ' selected';
                 return <path key={st.id} className={classes} id={st.id} d={st.d} />
@@ -118,14 +119,14 @@ console.log('showDescClass', showDescClass);
           <div className={'item-description ' + showDescClass}>{tracking[selectedCode].desc}</div>
           <div className={flagsClass}>
             {multipleChoice.map((st: string) => (
-              <img key={st} style={{ width: '15%', height: '15%' }} data-flag={st} onClick={handleFlagClick} src={flags[st]} />
+              <img key={st} style={{ width: '15%', height: '15%' }} data-flag={st} onClick={handleFlagClick} src={tracking[st].img} />
             ))}
           </div>
 
 {/*        <RemedialSetup /> */}
           <div className={enterDescClass}>
             <div className="focused-flag">
-              <img src={flags[selectedCode.toLowerCase()]} />
+              <img src={tracking[selectedCode].img} />
               <div className="item-description-wrapper">
                 <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
                 <textarea onBlur={handleBlur} id="item-description"></textarea>

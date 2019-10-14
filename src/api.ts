@@ -1,10 +1,13 @@
 import { safeJSONParse, setRemedial } from './api-helper';
+import svgData from './us-map-data.js';
+import { flags } from './USFlags';
 const api_base = '//rest.toewsweb.net/track.php';
 
-export const getTracking = (user_id: number) => {
+export const getTracking = (user_id: number, bank: string) => {
   let url = api_base + '/gettrack';
   let data = {
-    user_id: user_id
+    user_id,
+    bank
   };
   let options: any = {
     headers: {
@@ -23,9 +26,15 @@ export const getTracking = (user_id: number) => {
       let tracking_data = data.tracking_data || '';
       tracking_data = safeJSONParse(tracking_data);
       setRemedial(tracking_data);
-//      let keys = Object.keys(tracking_data);
-//      keys.forEach((k: string) => { tracking_data[k].desc = 'lorem ipsum etcetera, the time has come, the walrus said, to talk of many things: of shoes and ships and sealing wax, of cabbages and kings--and why the sea is boiling hot, and whether pigs have wings.'; });
       return tracking_data; 
+    })
+    .then((resp: any) => {
+      for (let key in resp) {
+        let svg = svgData.find((item: any) => item.id === key);
+        resp[key].svg = svg;
+        resp[key].img = flags[key];
+      }
+      return resp;
     })
     ;
 };

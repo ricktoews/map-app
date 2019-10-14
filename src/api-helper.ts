@@ -22,7 +22,6 @@ export const setRemedial = (tracking_data: any) => {
     let { presented, correct } = tracking_data[key];
     let remedial = (presented > 4 && correct / presented < .9)
     tracking_data[key].remedial = remedial;
-    console.log('setRemedial', key, remedial, correct, presented);
   }
 }
 

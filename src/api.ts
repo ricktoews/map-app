@@ -1,4 +1,4 @@
-import { safeJSONParse, setRemedial } from './api-helper';
+import { safeJSONParse, setRemedial, undecorate, fillInMissing } from './api-helper';
 import svgData from './us/map-data.js';
 import { flags } from './us/Flags';
 const api_base = '//rest.toewsweb.net/track.php';
@@ -25,6 +25,7 @@ export const getTracking = (user_id: number, bank: string) => {
       let data = resp.data || {};
       let tracking_data = data.tracking_data || '';
       tracking_data = safeJSONParse(tracking_data);
+      fillInMissing(tracking_data);
       setRemedial(tracking_data);
       return tracking_data; 
     })
@@ -42,6 +43,7 @@ export const getTracking = (user_id: number, bank: string) => {
 
 export const setTracking = (user_id: number, tracking_data: any) => {
   let url = api_base + '/track';
+  undecorate(tracking_data);
   let req_payload = {
     user_id: user_id,
     tracking_data: tracking_data

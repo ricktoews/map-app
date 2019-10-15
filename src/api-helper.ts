@@ -1,3 +1,5 @@
+import usStates from './us/map-data.js';
+
 /*
   Utility function. Should probably go in an imported helper file.
   Perform JSON.parse within a try/catch block, and return the result.
@@ -25,3 +27,18 @@ export const setRemedial = (tracking_data: any) => {
   }
 }
 
+
+export const undecorate = (tracking_data: any) => {
+  for (let key in tracking_data) {
+    delete tracking_data[key].img;
+    delete tracking_data[key].svg;
+  }
+}
+
+export const fillInMissing = (tracking_data: any) => {
+  usStates.forEach((st: any) => {
+    if (!tracking_data[st.id]) {
+      tracking_data[st.id] = { presented: 0, correct: 0 };
+    }
+  });
+}

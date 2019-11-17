@@ -12,7 +12,7 @@ const IGNORE = -1;
 
 /*
   The threshold hash and calculateFocus function are used to determine which category of focus an item belongs to.
-  The arbitrary threshold values: 
+  The arbitrary threshold values:
     incorrect < 70% of the time AND presented more than 4 times: greater focus.
     ratio of presented / max presented < 50%, item considered "neglected": greater focus.
 
@@ -43,7 +43,7 @@ function calculateFocus(p: number, c: number, max: number) {
   item, it is considered "neglected" and should probably receive greater attention.
 */
 function getMaxPresented(tracking: any) {
-  let presentedVals = tracking ? Object.values(tracking).map((item: any) => item.presented) : [];
+  let presentedVals = tracking ? Object.values(tracking).map((item: any) => item.presented.length) : [];
   let { fences, outliers } = findOutliers(presentedVals);
   // Might be better to filter by fences than individual outliers. Consider it.
   presentedVals = presentedVals.filter((v: any) => outliers.outer.indexOf(v) === -1);
@@ -78,7 +78,7 @@ function makeItem(item: string, setChangeIgnore: Function, attend: number) {
 
 /*
   makeScore: generate code for the scoring indicator. Uses proportion of correct / presented.
-  Coloring scheme is used: green for correct, red for incorrect. 
+  Coloring scheme is used: green for correct, red for incorrect.
   Example: if an item has been presented 12 times and answered correctly 8 times, the bar is 2/3 green, 1/3 red.
   There is also an opacity component: The greater the presented / max presented ratio, the more opaque the score bar.
   Items with a faint score bar have been presented fewer times and should probably receive more focus.
@@ -86,9 +86,9 @@ function makeItem(item: string, setChangeIgnore: Function, attend: number) {
 function makeScore(presented: number, correct: number, maxPresented: number) {
   let scoreWidth = 20;
   let pWidth = scoreWidth;
-  let cWidth: number = pWidth * correct / presented;
+  let cWidth: number = presented ? pWidth * correct / presented : 0;
   let opacity: number = presented / maxPresented;
-
+  presented > 15 && console.log('makeScore', presented, correct, pWidth, cWidth);
   let output = (
     <div className="score" style={{ width: scoreWidth + 'px', opacity: opacity }}>
       <div className="presented" style={{ width: pWidth + 'px' }}></div>
@@ -106,19 +106,19 @@ interface IProps {
 function ScoringPanel(props: IProps) {
   tracking = props.tracking;
   const [ changeIgnore, setChangeIgnore ] = useState({});
-  
+
   const items = tracking ? Object.keys(tracking) : [];
   items.sort();
   const maxPresented = getMaxPresented(tracking);
- 
+
   return (
     <div className="scoring-panel">
       <h3>Spotlight</h3>
       <ul className="section">
       {items.map((item: any, key: number) => {
         let showItem = makeItem(item, setChangeIgnore, SPOTLIGHT);
-        let presented = tracking[item].presented;
-        let correct = tracking[item].correct;
+        let presented = tracking[item].presented.length || 0;
+        let correct = tracking[item].correct.filter((a: number) => a).length || 0;
         let focusLevel = calculateFocus(presented, correct, maxPresented);
         let show = tracking[item].attend === 1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
@@ -128,8 +128,8 @@ function ScoringPanel(props: IProps) {
       <ul className="section">
       {items.map((item: any, key: number) => {
         let showItem = makeItem(item, setChangeIgnore, ATTEND_OFF);
-        let presented = tracking[item].presented;
-        let correct = tracking[item].correct;
+        let presented = tracking[item].presented.length || 0;
+        let correct = tracking[item].correct.filter((a: number) => a).length || 0;
         let focusLevel = calculateFocus(presented, correct, maxPresented);
         let show = focusLevel === 10 && tracking[item].attend !== -1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
@@ -139,8 +139,8 @@ function ScoringPanel(props: IProps) {
       <ul className="section">
       {items.map((item: any, key: number) => {
         let showItem = makeItem(item, setChangeIgnore, ATTEND_OFF);
-        let presented = tracking[item].presented;
-        let correct = tracking[item].correct;
+        let presented = tracking[item].presented.length || 0;
+        let correct = tracking[item].correct.filter((a: number) => a).length || 0;
         let focusLevel = calculateFocus(presented, correct, maxPresented);
         let show = focusLevel === 0 && tracking[item].attend !== -1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
@@ -150,8 +150,8 @@ function ScoringPanel(props: IProps) {
       <ul className="section">
       {items.map((item: any, key: number) => {
         let showItem = makeItem(item, setChangeIgnore, IGNORE);
-        let presented = tracking[item].presented;
-        let correct = tracking[item].correct;
+        let presented = tracking[item].presented.length || 0;
+        let correct = tracking[item].correct.filter((a: number) => a).length || 0;
         let show = tracking[item].attend === -1;
         return show ? <li key={key}>{showItem}{makeScore(presented, correct, maxPresented)}</li> : null;
       })}

@@ -1,13 +1,14 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 //import usStates from './us-map-data.js';
 //import { flags } from './USFlags';
 import { pickRandomFlags } from '../flags-helper';
+import { setRemedial } from '../api-helper';
 import { initPool, updatePool } from '../pool';
 import { initKeyHandler } from '../key-entry';
 import { setTracking } from '../api';
 import { user_id } from '../config';
 import './Map.scss';
-  
+
 interface Iprops {
   tracking: any;
   width: number;
@@ -28,7 +29,7 @@ const Map: React.FC<Iprops> = (props: Iprops) => {
 
   let itemNdx = Math.floor(Math.random() * pool.length);
   selectedCode = pool[itemNdx];
-  selectedCode = 'OK';
+  selectedCode = 'WI';
   multipleChoice = pickRandomFlags(selectedCode, tracking);
 
   /*
@@ -85,18 +86,28 @@ const Map: React.FC<Iprops> = (props: Iprops) => {
   function processClicked(code: any) {
     console.log('processClicked', code, selectedCode);
     if (code === selectedCode) {
-      tracking[selectedCode].correct++;
-      tracking[selectedCode].presented++;
+      tracking[selectedCode].correct.push(1);
+      tracking[selectedCode].presented.push(1);
+      while (tracking[selectedCode].presented.length > 10) {
+        tracking[selectedCode].presented.shift();
+        tracking[selectedCode].correct.shift();
+      }
+      setRemedial(tracking);
       let newPool = updatePool(selectedCode, pool);
       setPool(newPool);
     } else {
-      tracking[selectedCode].presented++;
+      tracking[selectedCode].correct.push(0);
+      tracking[selectedCode].presented.push(1);
+      while (tracking[selectedCode].presented.length > 10) {
+        tracking[selectedCode].presented.shift();
+        tracking[selectedCode].correct.shift();
+      }
     }
     setTracking(1, tracking).then((resp: any) => {
       console.log('Save completed', selectedCode, tracking[selectedCode]);
     });
   }
-console.log('map pieces', Object.values(tracking).map((item: any) => item.svg));
+
   var mapPieces = Object.values(tracking).map((item: any) => item.svg);
   return (
       <div className="layout">
@@ -140,4 +151,3 @@ console.log('map pieces', Object.values(tracking).map((item: any) => item.svg));
 }
 
 export default Map;
-

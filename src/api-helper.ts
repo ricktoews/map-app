@@ -22,8 +22,8 @@ export const  safeJSONParse = (str: any) => {
 export const setRemedial = (tracking_data: any) => {
   for (let key in tracking_data) {
     let { presented, correct } = tracking_data[key];
-    let remedial = (presented > 4 && correct / presented < .9)
-    tracking_data[key].remedial = remedial;
+    //let remedial = (presented > 4 && correct / presented < .9)
+    //tracking_data[key].remedial = remedial;
   }
 }
 
@@ -38,7 +38,7 @@ export const undecorate = (tracking_data: any) => {
 export const fillInMissing = (tracking_data: any) => {
   usStates.forEach((st: any) => {
     if (!tracking_data[st.id]) {
-      tracking_data[st.id] = { presented: 0, correct: 0 };
+      tracking_data[st.id] = { presented: [], correct: [] };
     }
   });
 }

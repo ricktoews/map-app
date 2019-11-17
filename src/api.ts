@@ -19,7 +19,7 @@ export const getTracking = (user_id: number, bank: string) => {
 
   return fetch(url, options)
     .then((resp: any) => { return resp.json(); })
-    .then((resp: any) => { 
+    .then((resp: any) => {
       // Currently, the server is returning the tracking data as a string. Ideally, it would
       // return JSON, so we wouldn't have to process that here.
       let data = resp.data || {};
@@ -27,7 +27,7 @@ export const getTracking = (user_id: number, bank: string) => {
       tracking_data = safeJSONParse(tracking_data);
       fillInMissing(tracking_data);
       setRemedial(tracking_data);
-      return tracking_data; 
+      return tracking_data;
     })
     .then((resp: any) => {
       for (let key in resp) {
@@ -43,10 +43,11 @@ export const getTracking = (user_id: number, bank: string) => {
 
 export const setTracking = (user_id: number, tracking_data: any) => {
   let url = api_base + '/track';
-  undecorate(tracking_data);
+  let clone = JSON.parse(JSON.stringify(tracking_data));
+  undecorate(clone);
   let req_payload = {
     user_id: user_id,
-    tracking_data: tracking_data
+    tracking_data: clone
   };
   let options: any = {
     headers: {
@@ -58,12 +59,11 @@ export const setTracking = (user_id: number, tracking_data: any) => {
 
   return fetch(url, options)
     .then((resp: any) => { return resp.json(); })
-    .then((resp: any) => { 
+    .then((resp: any) => {
       let data = resp.data || {};
       let tracking_data = data.tracking_data || '';
       tracking_data = safeJSONParse(tracking_data);
       data.tracking_data = tracking_data;
-      return tracking_data; 
+      return tracking_data;
     });
 };
-

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import ScoringPanel from './ScoringPanel';
 import { getTracking } from './api';
-import MapModule from './us/Map';
-//import MapModule from './AntillesMap';
+import MapModule from './Map';
+//import MapModule from './antilles/Map';
 
-const Map: React.FC = () => {
+const MapQuiz: React.FC = () => {
   const [ tracking_data, setTracking_data ] = useState(null);
-  console.log('tracking_data', tracking_data);
   if (!tracking_data) {
     getTracking(1, 'usmap')
       .then((resp: any) => {
+      console.log('tracking data', resp);
         setTracking_data(resp);
       });
   }
@@ -21,5 +21,5 @@ const Map: React.FC = () => {
   ) : null;
 }
 
-export default Map;
+export default MapQuiz;
 

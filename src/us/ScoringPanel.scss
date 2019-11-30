@@ -1,0 +1,62 @@
+$scoring-item-height: 10px;
+
+h3 {
+  margin: 0;
+}
+
+.section {
+  display: flex;
+  flex-wrap: wrap;
+
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+
+  font-size: 12px;
+}
+
+@media (min-width: 481px) {
+  .section {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    width: 400px;
+  }
+}
+
+ul.section li {
+  width: 75px;
+}
+
+.scoring-item {
+  display: inline-block;
+  width: 30px;
+  height: $scoring-item-height;
+  cursor: pointer;
+}
+
+.score {
+  display: inline-block;
+  position: relative;
+  height: $scoring-item-height;
+  background: #ccc;
+}
+.presented {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  height: $scoring-item-height;
+  background: red;
+}
+.correct {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: $scoring-item-height;
+  background: green;
+}

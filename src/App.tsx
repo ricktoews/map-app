@@ -1,10 +1,10 @@
 import React from 'react';
-import Map from './Map';
+import MapQuiz from './antilles/MapQuiz';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Map />
+      <MapQuiz />
     </div>
   );
 }

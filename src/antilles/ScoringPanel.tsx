@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { setTracking } from './api';
-import { findOutliers } from './helpers/outliers';
+import { findOutliers } from '../helpers/outliers';
 import './ScoringPanel.scss';
 
 var tracking: any;

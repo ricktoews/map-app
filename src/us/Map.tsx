@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 //import usStates from './us-map-data.js';
 //import { flags } from './USFlags';
-import { pickRandomFlags } from '../flags-helper';
-import { setRemedial } from '../api-helper';
-import { initPool, updatePool } from '../pool';
+import { pickRandomFlags } from './flags-helper';
+import { setRemedial } from './api-helper';
+import { initPool, updatePool } from './pool';
 import { initKeyHandler } from '../key-entry';
-import { setTracking } from '../api';
+import { setTracking } from './api';
 import { user_id } from '../config';
 import './Map.scss';
 
@@ -29,7 +29,6 @@ const Map: React.FC<Iprops> = (props: Iprops) => {
 
   let itemNdx = Math.floor(Math.random() * pool.length);
   selectedCode = pool[itemNdx];
-  selectedCode = 'WI';
   multipleChoice = pickRandomFlags(selectedCode, tracking);
 
   /*

@@ -1,4 +1,4 @@
-import usStates from './us/map-data.js';
+import usStates from './map-data.js';
 
 /*
   initPool. Set pool size for each round.

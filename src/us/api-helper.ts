@@ -1,4 +1,4 @@
-import usStates from './us/map-data.js';
+import usStates from './map-data.js';
 
 /*
   Utility function. Should probably go in an imported helper file.

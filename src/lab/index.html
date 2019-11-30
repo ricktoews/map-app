@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <title>Antilles Map</title>
+  <style type="text/css">
+    #antilles-map {
+      width: 500px;
+      height: auto;
+      border: 1px solid black;
+    }
+  </style>
+  <script src="./map-data.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<script>
+var html = `<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 901 620" id="antilles-map">`;
+antilles.forEach(item => {
+  if (item.path) {
+    let p = item.path;
+    let pathHtml = `<path id="${p.id}" fill="${p.fill}" d="${p.d}" />`;
+    html += pathHtml;
+  } else if (item.group) {
+    item.group.paths.forEach(p => {
+      let pathHtml = `<path id="${p.id}" fill="${p.fill}" d="${p.d}" />`;
+      html += pathHtml;
+    });
+  } else {
+      console.log('antilles item?', item);
+  }
+});
+html += `</svg>`;
+document.getElementById('map').innerHTML = html;
+</script>
+</body>
+</html>

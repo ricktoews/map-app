@@ -1,64 +1,151 @@
-import React, { useState } from 'react'; 
-import antilles from './map-data.js';
-import './map.scss';
-  
+import React, { useState } from 'react';
+import { pickRandomFlags } from './flags-helper';
+import { setRemedial } from './api-helper';
+import { initPool, updatePool } from './pool';
+import { initKeyHandler } from '../key-entry';
+import { setTracking } from './api';
+import { user_id } from '../config';
+import './Map.scss';
+
 interface Iprops {
   tracking: any;
   width: number;
 }
 
-const AntillesMap: React.FC<Iprops> = (props: Iprops) => {
+const Map: React.FC<Iprops> = (props: Iprops) => {
   const { tracking, width } = props;
-  const height: number = width * 5/8;
-
-
-  const unHighlightState = (e: any) => {
-    let target = e.target;
-    target.classList.remove('highlight');
-    e.stopPropagation();
+  const [ pool, setPool ] = useState<string[]>([]);
+  if (pool.length === 0) {
+    initPool(pool, tracking);
+    initKeyHandler();
   }
-    
-  const highlightState = (e: any) => {
-    let target = e.target;
-    console.log('highlightState', target);
-    target.classList.add('highlight');
-    e.stopPropagation();
-  }   
-  const removeSpaces = new RegExp(/\s+/g);
+  const height: number = width * 5/8;
+  const flagWidth: number = width / 6;
+  const flagHeight: number = flagWidth * 5/8;
+  var selectedCode: string;
+  var multipleChoice: any[];
+
+  let itemNdx = Math.floor(Math.random() * pool.length);
+  selectedCode = pool[itemNdx];
+  multipleChoice = pickRandomFlags(selectedCode, tracking);
+
+  /*
+    If the remedial flag is set:
+      If a description has been entered already,
+        Use the show-description class.
+        Use the hide-enter-description class.
+        Use the flags class.
+      Else,
+        Use the hide-description class.
+        Use the show-enter-description class.
+        Use the no-flags class.
+    Else,
+      Use the hide-description class.
+      Use the hide-enter-description class.
+      Use the flags class.
+
+  */
+  var curTrack = tracking[selectedCode];
+  console.log('curTrack', curTrack);
+  var showDescClass, enterDescClass, flagsClass;
+  if (curTrack.remedial) {
+    if (curTrack.desc > '') {
+      showDescClass = 'show-description';
+      enterDescClass = 'hide-enter-description';
+      flagsClass = 'flags';
+    } else {
+      showDescClass = 'hide-description';
+      enterDescClass = 'show-enter-description';
+      flagsClass = 'no-flags';
+    }
+  } else {
+    showDescClass = 'hide-description';
+    enterDescClass = 'hide-enter-description';
+    flagsClass = 'flags';
+  }
+
+  const handleFlagClick = (e: any) => {
+    let el = e.currentTarget;
+    let flag = el.dataset.flag;
+    processClicked(flag);
+  }
+
+  const handleBlur = (e: any) => {
+    let description = e.currentTarget.value;
+    console.log('description', selectedCode, description);
+    tracking[selectedCode].desc = description;
+    setPool(JSON.parse(JSON.stringify(pool)));
+    setTracking(1, tracking).then((resp: any) => {
+      console.log('Save description complete', selectedCode, tracking[selectedCode]);
+    });
+  }
+
+  function processClicked(code: any) {
+    console.log('processClicked', code, selectedCode);
+    if (code === selectedCode) {
+      tracking[selectedCode].correct.push(1);
+      tracking[selectedCode].presented.push(1);
+      while (tracking[selectedCode].presented.length > 10) {
+        tracking[selectedCode].presented.shift();
+        tracking[selectedCode].correct.shift();
+      }
+      setRemedial(tracking);
+      let newPool = updatePool(selectedCode, pool);
+      setPool(newPool);
+    } else {
+      tracking[selectedCode].correct.push(0);
+      tracking[selectedCode].presented.push(1);
+      while (tracking[selectedCode].presented.length > 10) {
+        tracking[selectedCode].presented.shift();
+        tracking[selectedCode].correct.shift();
+      }
+    }
+    setTracking(1, tracking).then((resp: any) => {
+      console.log('Save completed', selectedCode, tracking[selectedCode]);
+    });
+  }
+
+  var mapPieces = Object.values(tracking).map((item: any) => item.svg).filter(item => item);
+  console.log('mapPieces', mapPieces);
   return (
-      <div>
-        <div style={{ overflow: "hidden", width, height, backgroundColor: "#dfdfdf" }}>
+      <div className="layout">
+
+        <div className="map" style={{ height }}>
           <svg
-             onMouseOver={highlightState}
-             onMouseOut={unHighlightState}
              xmlns="http://www.w3.org/2000/svg"
-             viewBox="0 50 900 600"
-             id="us-map">
-             {antilles.map((svgitem: any, key: number) => {
+             viewBox="0 0 959 593"
+             id="svg-map">
+             {mapPieces.map(st => {
                 let classes = 'path';
-                if (svgitem.path) {
-                  let item = svgitem.path;
-                  let fill = item.fill || '#ccc';
-                  if (item.d) {
-                    let path = item.d.replace(removeSpaces, '');
-                    return <path key={key} className={classes} fill={fill} id={item.id} d={path} />
-                  }
-                } else if (svgitem.group) {
-                  let item = svgitem.group;
-                  let fill = item.fill || '#ccc';
-                  let paths = item.paths || [];
-                  let dAttrs = paths.map((p:any) => p.d).join('');
-                  let path = dAttrs.replace(removeSpaces, '');
-                  return <path key={key} className={classes} fill={fill} id={item.id} d={path} />
-                } else {
-                  return null;
-                }
+                if (st.id === selectedCode) classes += ' selected';
+                return <path key={st.id} className={classes} id={st.id} d={st.d} />
              })}
           </svg>
         </div>
+
+{/*        <MultChoice handleClick={handleClick} items={multipleChoic} selected={st} /> */}
+        <div className="interactive">
+          <div className={'item-description ' + showDescClass}>{tracking[selectedCode].desc}</div>
+          <div className={flagsClass}>
+            {multipleChoice.map((st: string) => (
+              <img key={st} style={{ width: '15%', height: '15%' }} data-flag={st} onClick={handleFlagClick} src={tracking[st].img} />
+            ))}
+          </div>
+
+{/*        <RemedialSetup /> */}
+          <div className={enterDescClass}>
+            <div className="focused-flag">
+              <img src={tracking[selectedCode].img} />
+              <div className="item-description-wrapper">
+                <div>Have a look at the flag, and write a detailed description, including anything that will help you associate it with {selectedCode}.</div>
+                <textarea onBlur={handleBlur} id="item-description"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
   );
 }
 
-export default AntillesMap;
-
+export default Map;

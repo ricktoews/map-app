@@ -1,6 +1,6 @@
 import { safeJSONParse, setRemedial, undecorate, fillInMissing } from './api-helper';
-import svgData from './us/map-data.js';
-import { flags } from './us/Flags';
+import svgData from './map-data.js';
+import { flags } from './Flags';
 const api_base = '//rest.toewsweb.net/track.php';
 
 export const getTracking = (user_id: number, bank: string) => {
@@ -23,10 +23,12 @@ export const getTracking = (user_id: number, bank: string) => {
       // Currently, the server is returning the tracking data as a string. Ideally, it would
       // return JSON, so we wouldn't have to process that here.
       let data = resp.data || {};
-      let tracking_data = data.tracking_data || '';
+      let tracking_data = data.tracking_data || {};
       tracking_data = safeJSONParse(tracking_data);
+      console.log('tracking data 1', JSON.parse(JSON.stringify(tracking_data)));
       fillInMissing(tracking_data);
       setRemedial(tracking_data);
+      console.log('tracking data 2', JSON.parse(JSON.stringify(tracking_data)));
       return tracking_data;
     })
     .then((resp: any) => {
